@@ -26,7 +26,7 @@ class  PermissionsFragment : Fragment() {
                     "Permission request granted",
                     Toast.LENGTH_LONG
                 ).show()
-                navigateToCamera()
+//                navigateToCamera()
             } else {
                 Toast.makeText(
                     context,
@@ -38,31 +38,31 @@ class  PermissionsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        when (PackageManager.PERMISSION_GRANTED) {
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.CAMERA
-            ) -> {
-                navigateToCamera()
-            }
-            else -> {
-                requestPermissionLauncher.launch(
-                    Manifest.permission.CAMERA
-                )
-            }
-        }
+//        when (PackageManager.PERMISSION_GRANTED) {
+//            ContextCompat.checkSelfPermission(
+//                requireContext(),
+//                Manifest.permission.CAMERA
+//            ) -> {
+//                navigateToCamera()
+//            }
+//            else -> {
+//                requestPermissionLauncher.launch(
+//                    Manifest.permission.CAMERA
+//                )
+//            }
+//        }
     }
 
-    private fun navigateToCamera() {
-        lifecycleScope.launchWhenStarted {
-            Navigation.findNavController(
-                requireActivity(),
-                R.id.fragment_container
-            ).navigate(
-                R.id.action_permissions_to_camera
-            )
-        }
-    }
+//    private fun navigateToCamera() {
+//        lifecycleScope.launchWhenStarted {
+//            Navigation.findNavController(
+//                requireActivity(),
+//                R.id.fragment_container
+//            ).navigate(
+//                R.id.action_permissions_to_camera
+//            )
+//        }
+//    }
 
     companion object {
 

@@ -92,7 +92,7 @@ class OverlayView(context: Context?, attrs: AttributeSet?) :
 
     // Check handedness
     private fun isLeftHand(handLandmarkerResult: HandLandmarkerResult, index: Int): Boolean {
-        val handednessList = handLandmarkerResult.handedness()
+        val handednessList = handLandmarkerResult.handednesses()
 
         // Ensure the index is within bounds and the handedness list is not empty
         if (index >= 0 && index < handednessList.size) {

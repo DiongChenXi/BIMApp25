@@ -50,7 +50,7 @@ class TranslatorFragment : Fragment() {
 
             // separate left and right hand landmarks
             val handLandmarksTemp = handResult?.landmarks()
-            val handedness = handResult?.handedness()
+            val handedness = handResult?.handednesses()
 
             var leftHandResult: List<NormalizedLandmark>? = null
             var rightHandResult: List<NormalizedLandmark>? = null

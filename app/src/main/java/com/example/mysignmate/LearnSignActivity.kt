@@ -1,0 +1,195 @@
+package com.example.mysignmate
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+
+class LearnSignActivity : AppCompatActivity() {
+
+    private lateinit var dictionaryAdapter: DictionaryAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_learn_sign)
+        val recyclerView: RecyclerView = findViewById(R.id.list_dictionary)
+
+        // Sample data (replace with your actual data)
+        val itemList = listOf(
+            // Images and Videos sourced from https://www.bimsignbank.org/groups/
+            // Module 1
+            DictionaryItem("Waalaikumussalam", R.drawable.waalaikumussalam,"https://www.youtube.com/embed/v0NRzhlaZJc?si=_MxSgMy-ecF_Hfxd"),
+            DictionaryItem("Khabar Baik", R.drawable.khabar_baik,"https://www.youtube.com/embed/-EjOCS_PLt0?si=NPRZJGqJSHx-UY50"),
+            DictionaryItem("Saya", R.drawable.saya,"https://www.youtube.com/embed/hFlubKThPdE?si=qPalsCtiq7g1g-3Y"),
+            DictionaryItem("Awak", R.drawable.awak,"https://www.youtube.com/embed/GSERjhVh82E?si=LmKyC33bLW7Hyawk"),
+            DictionaryItem("Nama", R.drawable.nama,"https://www.youtube.com/embed/0SPq5YPBvjI?si=INlI7wYqY1LwjfOr"),
+            DictionaryItem("Bahasa Isyarat", R.drawable.bahasa_isyarat,"https://www.youtube.com/embed/ynMMpd4PmLs?si=KVVpDEo62nXwEHFu"),
+            DictionaryItem("Terima Kasih", R.drawable.terima_kasih,"https://www.youtube.com/embed/uQiZ5mBhers?si=fxbUM984uCJYIbQG"),
+            DictionaryItem("Selamat Pagi", R.drawable.selamat_pagi,"https://www.youtube.com/embed/kspVcgd9k-s?si=8vpLgvlfyaM_gJIe"),
+            // Module 2
+//            DictionaryItem("Apa", R.drawable.,""),
+//            DictionaryItem("Bagaimana", R.drawable.,""),
+//            DictionaryItem("Baik", R.drawable.,""),
+//            DictionaryItem("Baik2", R.drawable.,""),
+//            DictionaryItem("Berapa", R.drawable.,""),
+//            DictionaryItem("Bila", R.drawable.,""),
+//            DictionaryItem("Jahat", R.drawable.,""),
+//            DictionaryItem("Mana", R.drawable.,""),
+//            DictionaryItem("Panas", R.drawable.,""),
+//            DictionaryItem("Panas2", R.drawable.,""),
+//            DictionaryItem("Pandai", R.drawable.,""),
+//            DictionaryItem("Pandai2", R.drawable.,""),
+//            DictionaryItem("Perlahan", R.drawable.,""),
+//            DictionaryItem("Perlahan2", R.drawable.,""),
+//            DictionaryItem("Sejuk", R.drawable.,""),
+//            DictionaryItem("Siapa", R.drawable.,""),
+//            // Module 3
+//            DictionaryItem("Abang", R.drawable.,""),
+//            DictionaryItem("Ayah", R.drawable.,""),
+//            DictionaryItem("Bomba", R.drawable.,""),
+//            DictionaryItem("Emak", R.drawable.,""),
+//            DictionaryItem("Kakak", R.drawable.,""),
+//            DictionaryItem("Keluarga", R.drawable.,""),
+//            DictionaryItem("Lelaki", R.drawable.,""),
+//            DictionaryItem("Perempuan", R.drawable.,""),
+//            DictionaryItem("Polis", R.drawable.,""),
+//            // Module 4
+//            DictionaryItem("Adik Lelaki", R.drawable.,""),
+//            DictionaryItem("Adik Perempuan", R.drawable.,""),
+//            DictionaryItem("Anak", R.drawable.,""),
+//            DictionaryItem("Saudara", R.drawable.,""),
+//            DictionaryItem("Datuk", R.drawable.,""),
+//            DictionaryItem("Nenek", R.drawable.,""),
+//            // Module 5
+//            DictionaryItem("Air", R.drawable.,""),
+//            DictionaryItem("Cuaca", R.drawable.,""),
+//            DictionaryItem("Duit", R.drawable.,""),
+//            DictionaryItem("Hari", R.drawable.,""),
+//            DictionaryItem("Hujan", R.drawable.,""),
+//            DictionaryItem("Masalah", R.drawable.,""),
+//            DictionaryItem("Payung", R.drawable.,""),
+//            DictionaryItem("Ribut", R.drawable.,""),
+//            DictionaryItem("Tandas", R.drawable.,""),
+//            // Module 6
+//            DictionaryItem("Bas", R.drawable.,""),
+//            DictionaryItem("Bola", R.drawable.,""),
+//            DictionaryItem("Esok", R.drawable.,""),
+//            DictionaryItem("Jam", R.drawable.,""),
+//            DictionaryItem("Kereta", R.drawable.,""),
+//            DictionaryItem("Masa", R.drawable.,""),
+//            DictionaryItem("Nasi Lemak", R.drawable.,""),
+//            DictionaryItem("Pensil", R.drawable.,""),
+//            DictionaryItem("Pukul", R.drawable.,""),
+//            DictionaryItem("Teh Tarik", R.drawable.,""),
+//            DictionaryItem("Teksi", R.drawable.,""),
+//            // Module 7
+//            DictionaryItem("Arah", R.drawable.,""),
+//            DictionaryItem("Gambar", R.drawable.,""),
+//            DictionaryItem("Hospital", R.drawable.,""),
+//            DictionaryItem("Jalan", R.drawable.,""),
+//            DictionaryItem("Kafetaria", R.drawable.,""),
+//            DictionaryItem("Kedai", R.drawable.,""),
+//            DictionaryItem("Keretapi", R.drawable.,""),
+//            DictionaryItem("Makan", R.drawable.,""),
+//            DictionaryItem("Pen", R.drawable.,""),
+//            DictionaryItem("Sekolah", R.drawable.,""),
+//            // Module 8
+//            DictionaryItem("Ada", R.drawable.,""),
+//            DictionaryItem("Berlari", R.drawable.,""),
+//            DictionaryItem("Boleh", R.drawable.,""),
+//            DictionaryItem("Buang", R.drawable.,""),
+//            DictionaryItem("Dapat", R.drawable.,""),
+//            DictionaryItem("Dari", R.drawable.,""),
+//            DictionaryItem("Minum", R.drawable.,""),
+//            DictionaryItem("Mohon", R.drawable.,""),
+//            DictionaryItem("Mohon2", R.drawable.,""),
+//            DictionaryItem("Sudah", R.drawable.,""),
+//            DictionaryItem("Tanya", R.drawable.,""),
+//            DictionaryItem("Tolong", R.drawable.,""),
+//            DictionaryItem("Tolong2", R.drawable.,""),
+//            // Module 9
+//            DictionaryItem("Bawa", R.drawable.,""),
+//            DictionaryItem("Beli", R.drawable.,""),
+//            DictionaryItem("Beli2", R.drawable.,""),
+//            DictionaryItem("Buat", R.drawable.,""),
+//            DictionaryItem("Jangan", R.drawable.,""),
+//            DictionaryItem("Jumpa", R.drawable.,""),
+//            DictionaryItem("Kacau", R.drawable.,""),
+//            DictionaryItem("Lupa", R.drawable.,""),
+//            DictionaryItem("Main", R.drawable.,""),
+//            DictionaryItem("Marah", R.drawable.,""),
+//            DictionaryItem("Marah2", R.drawable.,""),
+//            DictionaryItem("Pinjam", R.drawable.,""),
+//            DictionaryItem("Sampai", R.drawable.,""),
+//            // Module 10
+//            DictionaryItem("Ambil", R.drawable.,""),
+//            DictionaryItem("Baca", R.drawable.,""),
+//            DictionaryItem("Belajar", R.drawable.,""),
+//            DictionaryItem("Berjalan", R.drawable.,""),
+//            DictionaryItem("Curi", R.drawable.,""),
+//            DictionaryItem("Hilang", R.drawable.,""),
+//            DictionaryItem("Mari", R.drawable.,""),
+//            DictionaryItem("Mari2", R.drawable.,""),
+//            DictionaryItem("Kesakitan/Menyakitkan", R.drawable.,""),
+//            DictionaryItem("Pergi", R.drawable.,""),
+//            DictionaryItem("Pergi2", R.drawable.,""),
+//            DictionaryItem("Suka", R.drawable.,""),
+//            DictionaryItem("Tidur", R.drawable.,""),
+
+
+//            DictionaryItem("A", R.drawable.a,"https://www.youtube.com/embed/mrtQKEIWYqc"),
+//            DictionaryItem("B", R.drawable.b, "https://www.youtube.com/embed/LdM4S6BST0g"),
+//            DictionaryItem("Bagaimana", R.drawable.bagaimana,"https://www.youtube.com/embed/s6jw3JLtwo0\\"),
+//            DictionaryItem("C", R.drawable.c,"https://www.youtube.com/embed/Fbv-7HAS5wU"),
+//            DictionaryItem("D", R.drawable.d,"https://www.youtube.com/embed/XKbgTKnANcY"),
+//            DictionaryItem("E", R.drawable.e,"https://www.youtube.com/embed/Sxv8yrdfT9Q"),
+//            DictionaryItem("F", R.drawable.f,"https://www.youtube.com/embed/AcSxG1__wxs"),
+//            DictionaryItem("G", R.drawable.g,"https://www.youtube.com/embed/l-MF20_qOWs"),
+//            DictionaryItem("H", R.drawable.h,"https://www.youtube.com/embed/UujVOdmfQNI"),
+//            DictionaryItem("I", R.drawable.i,"https://www.youtube.com/embed/xGonomZ36bw"),
+//            DictionaryItem("J", R.drawable.j,"https://www.youtube.com/embed/HeGhbHKOK9k"),
+//            DictionaryItem("K", R.drawable.k,"https://www.youtube.com/embed/r6Ywn32kki8"),
+//            DictionaryItem("Ke", R.drawable.ke,"https://www.youtube.com/embed/ZwtkTkmx5ME"),
+//            DictionaryItem("L", R.drawable.l,"https://www.youtube.com/embed/Xn_VXjLL6Cc"),
+//            DictionaryItem("M", R.drawable.m,"https://www.youtube.com/embed/-udLp7Vs_D8"),
+//            DictionaryItem("N", R.drawable.n,"https://www.youtube.com/embed/2WugHgFRE9k"),
+//            DictionaryItem("O", R.drawable.o,"https://www.youtube.com/embed/8SrQFU-OSC0"),
+//            DictionaryItem("P", R.drawable.p,"https://www.youtube.com/embed/Zry4ncgRz7s"),
+//            DictionaryItem("Perpustakaan", R.drawable.perpustakaan,"https://www.youtube.com/embed/yG12wX1g4Fk"),
+//            DictionaryItem("Q", R.drawable.q,"https://www.youtube.com/embed/4UDPiFs3nys"),
+//            DictionaryItem("R", R.drawable.r,"https://www.youtube.com/embed/HFNc88dL6wQ"),
+//            DictionaryItem("S", R.drawable.s,"https://www.youtube.com/embed/jc58PaoNuiA"),
+//            DictionaryItem("T", R.drawable.t,"https://www.youtube.com/embed/qoB09rjAo88"),
+//            DictionaryItem("V", R.drawable.u,"https://www.youtube.com/embed/n861kdyURPQ"),
+//            DictionaryItem("V", R.drawable.v,"https://www.youtube.com/embed/aQ94CfBI-oc"),
+//            DictionaryItem("W", R.drawable.w,"https://www.youtube.com/embed/-P2m7bKLOgg"),
+//            DictionaryItem("X", R.drawable.x,"https://www.youtube.com/embed/S_EV2-nJYPY"),
+//            DictionaryItem("Y", R.drawable.y,"https://www.youtube.com/embed/0Ii73lt0pmk"),
+//            DictionaryItem("Z", R.drawable.z,"https://www.youtube.com/embed/pnS4sNqK0yE")
+
+            // Add more items as needed
+        )
+
+
+        // Create an instance of your Adapter class and attach it to the RecyclerView
+        dictionaryAdapter = DictionaryAdapter(itemList)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = dictionaryAdapter
+
+        // Assuming you have a SearchView in your layout with ID search_view
+        val searchView: SearchView = findViewById(R.id.search_view)
+
+        // Set up SearchView listener
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                dictionaryAdapter.filter(newText.orEmpty())
+                return true
+            }
+        })
+    }
+}

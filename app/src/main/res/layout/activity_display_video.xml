@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/transparent">
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <Button
-            android:id="@+id/learn_sign_button"
-            android:layout_width="251dp"
-            android:layout_height="85dp"
-            android:layout_below="@id/translate_sign_button"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="50dp"
-            android:backgroundTint="@color/deepblue"
-            android:onClick="onLearnSignButtonClick"
-            android:text="Learn Sign"
-            android:textSize="25sp" />
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -75,17 +58,50 @@
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 
-        <Button
-            android:id="@+id/translate_sign_button"
-            android:layout_width="251dp"
-            android:layout_height="85dp"
+        <VideoView
+            android:id="@+id/video_display"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
             android:layout_below="@id/toolbar"
             android:layout_centerInParent="true"
-            android:layout_marginTop="200dp"
+            android:layout_marginTop="30dp" />
+
+        <TextView
+            android:id="@+id/description_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/video_display"
+            android:layout_alignStart="@+id/video_display"
+            android:layout_alignEnd="@+id/video_display"
+            android:layout_marginTop="30dp"
+            android:text="Video uploaded! Would you like to proceed?"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/continue_button"
+            android:layout_width="251dp"
+            android:layout_height="85dp"
+            android:layout_below="@id/description_text"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="30dp"
             android:backgroundTint="@color/deepblue"
-            android:onClick="onTranslateSignButtonClick"
-            android:text="Translate Sign"
+            android:onClick="onContinueButtonClick"
+            android:text="Continue"
             android:textSize="25sp" />
+
+        <Button
+            android:id="@+id/back_button"
+            android:layout_width="251dp"
+            android:layout_height="85dp"
+            android:layout_below="@id/continue_button"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="25dp"
+            android:backgroundTint="@color/deepblue"
+            android:onClick="onBackButtonClick"
+            android:text="Upload Another"
+            android:textSize="25sp" />
+
+
 
     </RelativeLayout>
 
