@@ -15,9 +15,8 @@ class LearnSignActivity : AppCompatActivity() {
         setContentView(R.layout.activity_learn_sign)
         val recyclerView: RecyclerView = findViewById(R.id.list_dictionary)
 
-        // Sample data (replace with your actual data)
+        // Images and Videos sourced from https://www.bimsignbank.org/groups/
         val itemList = listOf(
-            // Images and Videos sourced from https://www.bimsignbank.org/groups/
             // Module 1
             DictionaryItem("Waalaikumussalam", R.drawable.waalaikumussalam,"https://www.youtube.com/embed/v0NRzhlaZJc?si=_MxSgMy-ecF_Hfxd"),
             DictionaryItem("Khabar Baik", R.drawable.khabar_baik,"https://www.youtube.com/embed/-EjOCS_PLt0?si=NPRZJGqJSHx-UY50"),
@@ -70,18 +69,18 @@ class LearnSignActivity : AppCompatActivity() {
             DictionaryItem("Payung", R.drawable.payung,"https://www.youtube.com/embed/qe230W7CmXQ?si=5VaQC51VUnLKmzl4"),
             DictionaryItem("Ribut", R.drawable.ribut,"https://www.youtube.com/embed/akDpVXtIQJ4?si=ntX8omIBQB3xpa2S"),
             DictionaryItem("Tandas", R.drawable.tandas,"https://www.youtube.com/embed/upxImdU-AgA?si=nomrPobJqNxbeSCm"),
-//            // Module 6
-//            DictionaryItem("Bas", R.drawable.,""),
-//            DictionaryItem("Bola", R.drawable.,""),
-//            DictionaryItem("Esok", R.drawable.,""),
-//            DictionaryItem("Jam", R.drawable.,""),
-//            DictionaryItem("Kereta", R.drawable.,""),
-//            DictionaryItem("Masa", R.drawable.,""),
-//            DictionaryItem("Nasi Lemak", R.drawable.,""),
-//            DictionaryItem("Pensil", R.drawable.,""),
-//            DictionaryItem("Pukul", R.drawable.,""),
-//            DictionaryItem("Teh Tarik", R.drawable.,""),
-//            DictionaryItem("Teksi", R.drawable.,""),
+            // Module 6
+            DictionaryItem("Bas", R.drawable.bas,"https://www.youtube.com/embed/Bte27XdoOjQ?si=kmCHvAj4rPdKKWIq"),
+            DictionaryItem("Bola", R.drawable.bola,"https://www.youtube.com/embed/3gG5Hg4gRZM?si=i2V0wcjPojpCn__D"),
+            DictionaryItem("Esok", R.drawable.esok,"https://www.youtube.com/embed/DDhGVdBnYw0?si=i0FbZyTHJ6ahjhh_"),
+            DictionaryItem("Jam", R.drawable.jam,"https://www.youtube.com/embed/LV76qMak38Y?si=AFgqB31YJAvAMwKs"),
+            DictionaryItem("Kereta", R.drawable.kereta,"https://www.youtube.com/embed/NivM4IsyRfY?si=GCPXgGhME6aRKJwj"),
+            DictionaryItem("Masa", 0,""),
+            DictionaryItem("Nasi Lemak", R.drawable.nasi_lemak,"https://www.youtube.com/embed/KhvAfNIrEs4?si=qk_WE2tklHwbIq3M"),
+            DictionaryItem("Pensil", R.drawable.pensil,"https://www.youtube.com/embed/2HgLYRLaHJg?si=bkzkCmUYrrtIxtXD"),
+            DictionaryItem("Pukul", R.drawable.pukul,"https://www.youtube.com/embed/BG7StzLGCvw?si=HLnwEyt_QavXEwFi"),
+            DictionaryItem("Teh Tarik", R.drawable.teh_tarik,"https://www.youtube.com/embed/VxYCY9yihbI?si=4Eu4jFJc1BXIPiyj"),
+            DictionaryItem("Teksi", R.drawable.teksi,"https://www.youtube.com/embed/kh10Kh7fOaI?si=e8c_BxSnJBceuJTn"),
 //            // Module 7
 //            DictionaryItem("Arah", R.drawable.,""),
 //            DictionaryItem("Gambar", R.drawable.,""),
