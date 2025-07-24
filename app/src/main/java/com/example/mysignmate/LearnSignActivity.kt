@@ -53,13 +53,13 @@ class LearnSignActivity : AppCompatActivity() {
             DictionaryItem("Lelaki", R.drawable.lelaki,"https://www.youtube.com/embed/rQOkFKoxPtc?si=Zwy5Edfb42djYWGo"),
             DictionaryItem("Perempuan", R.drawable.perempuan,"https://www.youtube.com/embed/vqWPssaQf9A?si=RqiNL4_y5ulpGu-R"),
             DictionaryItem("Polis", R.drawable.polis,"https://www.youtube.com/embed/xCWQ58uHY40?si=RXgsf2SNo4ftsCkT"),
-//            // Module 4
-//            DictionaryItem("Adik Lelaki", R.drawable.,""),
-//            DictionaryItem("Adik Perempuan", R.drawable.,""),
-//            DictionaryItem("Anak", R.drawable.,""),
-//            DictionaryItem("Saudara", R.drawable.,""),
-//            DictionaryItem("Datuk", R.drawable.,""),
-//            DictionaryItem("Nenek", R.drawable.,""),
+            // Module 4
+            DictionaryItem("Adik Lelaki", R.drawable.adik_lelaki,"https://www.youtube.com/embed/jA1p1ZZaIUo?si=_PA2G44EUIsoX5vu"),
+            DictionaryItem("Adik Perempuan", R.drawable.adik_perempuan,"https://www.youtube.com/embed/yOHur9ac1Ds?si=KHU7f_mq_M5SMV7M"),
+            DictionaryItem("Anak", R.drawable.anak,"https://www.youtube.com/embed/ZSyNrJtQBqM?si=-3hwT-fJH_v0BKMz"),
+            DictionaryItem("Saudara", R.drawable.saudara,"https://www.youtube.com/embed/rFvVkxrnkGU?si=fAOpxlnZx2pPOLGu"),
+            DictionaryItem("Datuk", R.drawable.datuk,"https://www.youtube.com/embed/NNrkBrEc0eA?si=Fi_1FwbIV3YIsKaP"),
+            DictionaryItem("Nenek", R.drawable.nenek,"https://www.youtube.com/embed/dQUXKnhlOxY?si=uo1F1457CNmVxwr8"),
 //            // Module 5
 //            DictionaryItem("Air", R.drawable.,""),
 //            DictionaryItem("Cuaca", R.drawable.,""),
