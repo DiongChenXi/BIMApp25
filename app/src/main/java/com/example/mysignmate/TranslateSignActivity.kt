@@ -42,6 +42,11 @@ class TranslateSignActivity : AppCompatActivity() {
         checkStoragePermissionAndOpenGallery()
     }
 
+    public fun onBackButtonClick(view: View) {
+        Toast.makeText(this, "Back Button Clicked!", Toast.LENGTH_SHORT).show()
+        finish()
+    }
+
     private fun requestCameraPermission() {
         requestCameraPermissionLauncher =
             registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->

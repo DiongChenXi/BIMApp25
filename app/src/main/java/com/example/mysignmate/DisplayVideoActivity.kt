@@ -1,5 +1,6 @@
 package com.example.mysignmate
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -13,6 +14,10 @@ import androidx.appcompat.app.AppCompatActivity
 class DisplayVideoActivity : AppCompatActivity() {
 
     private lateinit var videoView: VideoView
+    private var videoUriString: String? = null
+    companion object {
+        const val DISPLAY_VIDEO_URI = "com.example.mysignmate.VIDEO_URI"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +26,7 @@ class DisplayVideoActivity : AppCompatActivity() {
         videoView = findViewById(R.id.video_display)
         setVideoViewDimensions()
 
-        val videoUriString = intent.getStringExtra(TranslateSignActivity.EXTRA_VIDEO_URI)
+        videoUriString = intent.getStringExtra(TranslateSignActivity.EXTRA_VIDEO_URI)
 
         if (videoUriString != null) {
             val videoUri = Uri.parse(videoUriString)
@@ -104,11 +109,20 @@ class DisplayVideoActivity : AppCompatActivity() {
 
     public fun onContinueButtonClick(view: View) {
         Toast.makeText(this, "Continue Button Clicked!", Toast.LENGTH_SHORT).show()
+        val videoUri = Uri.parse(videoUriString)
+        launchResultsActivity(videoUri)
     }
 
-    public fun onBackButtonClick(view: View) {
+    public fun onBackButtonClick2(view: View) {
         Toast.makeText(this, "Back Button Clicked!", Toast.LENGTH_SHORT).show()
         finish()
+    }
+
+    private fun launchResultsActivity(uri: android.net.Uri) {
+        val intent = Intent(this, ResultsActivity::class.java).apply {
+            putExtra(DISPLAY_VIDEO_URI, uri.toString()) // Pass URI as a String
+        }
+        startActivity(intent)
     }
 }
     

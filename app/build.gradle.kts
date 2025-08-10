@@ -80,8 +80,9 @@ dependencies {
     implementation("com.google.mediapipe:tasks-vision:latest.release")
 
     // Pytorch
-    implementation ("org.pytorch:pytorch_android_lite:1.13.1")
-    implementation ("org.pytorch:pytorch_android_torchvision_lite:1.13.1")
+//    implementation ("org.pytorch:pytorch_android_lite:1.13.1")
+//    implementation ("org.pytorch:pytorch_android_torchvision_lite:1.13.1")
+    implementation ("org.pytorch:executorch-android:0.6.0-rc1")
 
     // Voice Transcription library using Whisper
     implementation("org.tensorflow:tensorflow-lite:2.14.0")

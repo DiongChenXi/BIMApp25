@@ -42,6 +42,7 @@
         <activity android:name=".TranslateSignActivity" />
         <activity android:name=".LearnSignActivity" />
         <activity android:name=".DisplayVideoActivity" />
+        <activity android:name=".ResultsActivity" />
 
     </application>
 
