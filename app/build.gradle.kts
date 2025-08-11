@@ -14,6 +14,11 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        ndk {
+            abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a", "x86_64")) // Common for most physical devices
+            // abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64' // For wider emulator support
+        }
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -77,7 +82,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 
     // MediaPipe Library
-    implementation("com.google.mediapipe:tasks-vision:latest.release")
+    implementation("com.google.mediapipe:tasks-vision:0.10.26")
 
     // Pytorch
 //    implementation ("org.pytorch:pytorch_android_lite:1.13.1")
