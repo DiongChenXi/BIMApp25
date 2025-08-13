@@ -78,21 +78,24 @@ class ResultsActivity : AppCompatActivity() {
         }
     }
 
-    private fun showLoading(isLoading: Boolean) {
-        // This function must be called from the Main thread
+    private fun showLoading(isLoading: Boolean, message: String? = null) {
         loadingProgressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        // Optionally, disable other UI elements while loading
         videoView.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
-        resultsTextView.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
-        // Disable buttons if needed
+//        resultsTextView.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE // Keep this if you want to hide the final result area during loading steps
+        // Or, if you want to show progress messages in resultsTextView itself:
+        // resultsTextView.visibility = View.VISIBLE // Make sure it's visible to show messages
+
+        if (isLoading && message != null) {
+            resultsTextView.text = message
+        }
+
         uploadButton.isEnabled = !isLoading
         backButton3.isEnabled = !isLoading
     }
 
     private fun processVideoAndPredict(videoUri: Uri) {
         lifecycleScope.launch { // Launch on Main, then switch context for IO/Default
-            showLoading(true) // Show loading UI (on Main thread)
-            resultsTextView.text = "Processing video..." // Initial message (on Main thread)
+            showLoading(true, "Processing video...") // Show loading UI (on Main thread)
 
             val processedKeypoints: List<FloatArray>? = try {
                 withContext(Dispatchers.IO) { // Switch to IO for video file processing
@@ -112,7 +115,7 @@ class ResultsActivity : AppCompatActivity() {
 
             if (processedKeypoints != null && processedKeypoints.isNotEmpty()) {
                 withContext(Dispatchers.Main) {
-                    resultsTextView.text = "Landmark processing complete. Running prediction..."
+                    showLoading(true, "Landmark processing complete. Running prediction...")
                 }
                 Log.d(TAG, "Processed keypoints shape: (${processedKeypoints.size}, ${processedKeypoints.firstOrNull()?.size ?: 0})")
 
@@ -169,17 +172,17 @@ class ResultsActivity : AppCompatActivity() {
         }
         val shape = longArrayOf(1, numberOfFrames.toLong(), keypointsPerFrame.toLong())
 
-// ✅ Sanity check: log shape and data type
+//  Sanity check: log shape and data type
         Log.d(TAG, "ExecuTorch input shape: [${shape.joinToString()}], " +
                 "Frames=$numberOfFrames, Keypoints/Frame=$keypointsPerFrame")
 
-// ✅ Log min/max/sample values for quick inspection
+//  Log min/max/sample values for quick inspection
         val minVal = flatInputArray.minOrNull() ?: Float.NaN
         val maxVal = flatInputArray.maxOrNull() ?: Float.NaN
         val sampleValues = flatInputArray.take(10).joinToString()
         Log.d(TAG, "Input tensor min=$minVal, max=$maxVal, sample=[${sampleValues}]")
 
-// ✅ Also confirm exact total length matches product of dimensions
+//  Also confirm exact total length matches product of dimensions
         val expectedLength = shape.reduce { acc, l -> acc * l }
         if (flatInputArray.size != expectedLength.toInt()) {
             Log.e(TAG, "Length mismatch: expected $expectedLength elements, got ${flatInputArray.size}")
@@ -222,25 +225,7 @@ class ResultsActivity : AppCompatActivity() {
                 Log.e(TAG, "Now capture adb logcat (see instructions in app log or run: adb logcat -v time | grep -i executorch )")
             }
 
-            // Call forward with the single EValue directly
-            // This assumes the forward method is defined like:
-            // fun forward(input: EValue): EValue  OR
-            // fun forward(input: EValue): Array<EValue>
             val outputReturn = execuTorchModule?.forward(singleInputEValue) // PASS SINGLE EVALUE
-
-            // Now we need to determine if outputReturn is a single EValue or Array<EValue>
-            // This depends on the *return type* of your specific forward method.
-
-            // OPTION A: If forward returns a single EValue
-            // val outputEValue: org.pytorch.executorch.EValue? = outputReturn
-            // if (outputEValue == null) {
-            //     Log.e(TAG, "Model forward pass returned null EValue.")
-            //     return "Model output error: No output received."
-            // }
-            // if (outputEValue.isTensor) {
-            //     // ... process single outputEValue ...
-            // } else { //...}
-
 
             val outputEValueArray: Array<org.pytorch.executorch.EValue>? = outputReturn as? Array<org.pytorch.executorch.EValue>
 
