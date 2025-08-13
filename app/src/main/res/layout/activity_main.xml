@@ -13,18 +13,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/learn_sign_button"
-            android:layout_width="251dp"
-            android:layout_height="85dp"
-            android:layout_below="@id/translate_sign_button"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="50dp"
-            android:backgroundTint="@color/deepblue"
-            android:onClick="onLearnSignButtonClick"
-            android:text="Learn Sign"
-            android:textSize="25sp" />
-
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -75,16 +63,26 @@
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/translate_sign_button"
             android:layout_width="251dp"
             android:layout_height="85dp"
             android:layout_below="@id/toolbar"
             android:layout_centerInParent="true"
             android:layout_marginTop="200dp"
-            android:backgroundTint="@color/deepblue"
             android:onClick="onTranslateSignButtonClick"
             android:text="Translate Sign"
+            android:textSize="25sp" />
+
+        <Button
+            android:id="@+id/learn_sign_button"
+            android:layout_width="251dp"
+            android:layout_height="85dp"
+            android:layout_below="@id/translate_sign_button"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="50dp"
+            android:onClick="onLearnSignButtonClick"
+            android:text="Learn Sign"
             android:textSize="25sp" />
 
     </RelativeLayout>

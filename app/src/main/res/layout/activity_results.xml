@@ -60,6 +60,17 @@
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 
+        <ProgressBar
+            android:id="@+id/loading_progress_bar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_below="@id/toolbar"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="100dp"
+            tools:visibility="visible"/>
+
         <VideoView
             android:id="@+id/replay_video_display"
             android:layout_width="1dp"
@@ -79,18 +90,6 @@
             android:text="Placeholder"
             android:textSize="20sp" />
 
-        <ProgressBar
-            android:id="@+id/loading_progress_bar"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:visibility="visible"/>
-
         <Button
             android:id="@+id/upload_button"
             android:layout_width="251dp"
@@ -98,7 +97,6 @@
             android:layout_below="@id/results_text"
             android:layout_centerInParent="true"
             android:layout_marginTop="30dp"
-            android:backgroundTint="@color/deepblue"
             android:onClick="onUploadButtonClick"
             android:text="Upload Another"
             android:textSize="25sp" />
@@ -110,7 +108,6 @@
             android:layout_below="@id/upload_button"
             android:layout_centerInParent="true"
             android:layout_marginTop="25dp"
-            android:backgroundTint="@color/deepblue"
             android:onClick="onBackButtonClick3"
             android:text="Back"
             android:textSize="25sp" />

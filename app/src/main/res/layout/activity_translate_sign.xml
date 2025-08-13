@@ -66,7 +66,6 @@
             android:layout_below="@id/toolbar"
             android:layout_centerInParent="true"
             android:layout_marginTop="200dp"
-            android:backgroundTint="@color/deepblue"
             android:onClick="onUploadButtonClick"
             android:text="Upload Video"
             android:textSize="25sp" />
@@ -78,7 +77,6 @@
             android:layout_below="@id/upload_button"
             android:layout_centerInParent="true"
             android:layout_marginTop="50dp"
-            android:backgroundTint="@color/deepblue"
             android:onClick="onRecordButtonClick"
             android:text="Record Video"
             android:textSize="25sp" />
@@ -90,7 +88,6 @@
             android:layout_below="@id/record_button"
             android:layout_centerInParent="true"
             android:layout_marginTop="50dp"
-            android:backgroundTint="@color/deepblue"
             android:onClick="onBackButtonClick"
             android:text="Back"
             android:textSize="25sp" />
