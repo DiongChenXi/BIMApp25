@@ -242,8 +242,6 @@ class ResultsActivity : AppCompatActivity() {
             // } else { //...}
 
 
-            // OPTION B: If forward returns Array<EValue> (even with single EValue input)
-            // This is actually more common for consistency, even if the model has one output.
             val outputEValueArray: Array<org.pytorch.executorch.EValue>? = outputReturn as? Array<org.pytorch.executorch.EValue>
 
             if (outputEValueArray == null || outputEValueArray.isEmpty()) {
@@ -255,18 +253,65 @@ class ResultsActivity : AppCompatActivity() {
 
             if (firstOutputEValue.isTensor) {
                 val outputExecutorchTensor: org.pytorch.executorch.Tensor = firstOutputEValue.toTensor()
-                // ... (rest of your tensor processing and label logic from the previous correct version)
-                val outputProbabilities = outputExecutorchTensor.dataAsFloatArray
-                // ... (your existing label processing)
-                // --- PASTE YOUR WORKING LABEL AND PROBABILITY PROCESSING HERE ---
-                val labels = loadLabels(applicationContext, "labels.txt")
-                if (labels.isEmpty()) { /* ... error ... */ }
-                if (outputProbabilities.isEmpty()) { /* ... error ... */ }
-                // ... max probability logic ...
-                return "Predicted Sign: ..." // or error
+                Log.d(TAG, "Output Tensor shape: ${outputExecutorchTensor.shape().joinToString()}") // Should be [1, 118]
+                Log.d(TAG, "Output Tensor dtype: ${outputExecutorchTensor.dtype()}")     // Should be Float32
+
+                // The output tensor data is what we need. It's an array of floats (logits).
+                // For a shape of (1, num_classes), dataAsFloatArray will give a flat array of num_classes elements.
+                val outputLogits: FloatArray = outputExecutorchTensor.dataAsFloatArray
+
+                if (outputLogits.isEmpty()) {
+                    Log.e(TAG, "Output logits array is empty.")
+                    return "Model output error: Empty logits."
+                }
+                Log.d(TAG, "Number of output logits: ${outputLogits.size}") // Should be 118
+
+                // Load your labels (ensure this path and file name are correct)
+                // You might have already loaded this earlier in the function, if so, reuse the 'labels' variable
+                val labels = loadLabels(applicationContext, "gesture_names.txt") // Or your actual label file name
+
+                if (labels.isEmpty()) {
+                    Log.e(TAG, "Labels file is empty or could not be loaded.")
+                    return "Error: Labels not loaded."
+                }
+
+                if (labels.size != outputLogits.size) {
+                    Log.e(TAG, "Mismatch between number of labels (${labels.size}) and model output logits (${outputLogits.size}).")
+                    return "Error: Label count mismatch with model output."
+                }
+
+                // --- Find the predicted class ---
+                // We need to find the index of the highest score (logit) in the outputLogits array.
+
+                var maxScore = -Float.MAX_VALUE
+                var predictedIndex = -1
+
+                for (i in outputLogits.indices) {
+                    if (outputLogits[i] > maxScore) {
+                        maxScore = outputLogits[i]
+                        predictedIndex = i
+                    }
+                }
+
+                if (predictedIndex == -1) {
+                    Log.e(TAG, "Could not determine predicted class from logits.")
+                    return "Error: Prediction processing failed."
+                }
+
+                // --- Map predicted index to label ---
+                val predictedLabel = labels[predictedIndex]
+
+//               Apply Softmax if you want probabilities (for display or confidence)
+                 val probabilities = softmax(outputLogits)
+                 val confidence = probabilities[predictedIndex]
+                 Log.i(TAG, "Predicted Sign: $predictedLabel, Confidence: $confidence")
+//                 return "Predicted Sign: $predictedLabel (Confidence: ${String.format("%.2f", confidence)})"
+
+                return "Predicted Sign: $predictedLabel"
+
             } else {
                 Log.e(TAG, "First model output EValue is not a tensor.")
-                "Model output error: Output is not a tensor."
+                return "Model output error: Output is not a tensor."
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error running ExecuTorch model inference", e) // Your current error is likely caught here
@@ -413,6 +458,33 @@ class ResultsActivity : AppCompatActivity() {
     public fun onBackButtonClick3(view: View) {
         Toast.makeText(this, "Home Button Clicked!", Toast.LENGTH_SHORT).show()
         finish()
+    }
+
+    fun softmax(input: FloatArray): FloatArray {
+        // For numerical stability, subtract the max value from each input before exponentiating.
+        // This prevents overflow if inputs are very large, and underflow if very small,
+        // without changing the actual softmax output distribution.
+        val maxInput = input.maxOrNull() ?: 0.0f
+
+        val exps = FloatArray(input.size)
+        var sumExps = 0.0f
+
+        for (i in input.indices) {
+            exps[i] = kotlin.math.exp(input[i] - maxInput)
+            sumExps += exps[i]
+        }
+
+        if (sumExps == 0.0f) { // Avoid division by zero if all exps are zero (e.g., after extreme underflow)
+            // Handle this case: either return a uniform distribution or signal an error
+            // For simplicity, returning a copy or zeros, but a uniform distribution is better.
+            // return FloatArray(input.size) { 1.0f / input.size } // Uniform distribution
+            return exps // Or let it divide by zero if you want to catch it as an error explicitly
+        }
+
+        for (i in exps.indices) {
+            exps[i] /= sumExps
+        }
+        return exps
     }
 
 }
