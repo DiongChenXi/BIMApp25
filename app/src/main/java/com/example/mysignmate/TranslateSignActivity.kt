@@ -5,11 +5,13 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.impl.Config
+
+private const val LOG_TAG = "Translate Sign Activity"
 
 class TranslateSignActivity : AppCompatActivity() {
     private lateinit var requestCameraPermissionLauncher: ActivityResultLauncher<String>
@@ -32,18 +34,18 @@ class TranslateSignActivity : AppCompatActivity() {
         initializeUploadVideoLauncher()
     }
 
-    public fun onRecordButtonClick(view: View) {
-        Toast.makeText(this, "Record Video Button Clicked!", Toast.LENGTH_SHORT).show()
+    fun onRecordButtonClick(view: View) {
+        Log.d(LOG_TAG, "Video Record selected, launching camera.")
         checkCameraPermissionAndOpen()
     }
 
-    public fun onUploadButtonClick(view: View) {
-        Toast.makeText(this, "Upload Video Button Clicked!", Toast.LENGTH_SHORT).show()
+    fun onUploadButtonClick(view: View) {
+        Log.d(LOG_TAG, "Video Upload selected, launching file explorer.")
         checkStoragePermissionAndOpenGallery()
     }
 
-    public fun onBackButtonClick(view: View) {
-        Toast.makeText(this, "Back Button Clicked!", Toast.LENGTH_SHORT).show()
+    fun onBackButtonClick(view: View) {
+        Log.d(LOG_TAG, "Navigating back to Main Activity.")
         finish()
     }
 
@@ -51,10 +53,10 @@ class TranslateSignActivity : AppCompatActivity() {
         requestCameraPermissionLauncher =
             registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
                 if (isGranted) {
-                    Toast.makeText(this, "Camera permission granted", Toast.LENGTH_SHORT).show()
+                    Log.d(LOG_TAG, "Camera permission granted.")
                     openCameraToRecordVideo()
                 } else {
-                    Toast.makeText(this, "Camera permission denied", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Camera permission denied! Video recording will not work.", Toast.LENGTH_SHORT).show()
                 }
             }
     }
@@ -63,10 +65,10 @@ class TranslateSignActivity : AppCompatActivity() {
         requestStoragePermissionLauncher =
             registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
                 if (isGranted) {
-                    Toast.makeText(this, "Storage permission granted", Toast.LENGTH_SHORT).show()
+                    Log.d(LOG_TAG, "Storage permission granted.")
                     openGalleryToUploadVideo()
                 } else {
-                    Toast.makeText(this, "Storage permission denied", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Storage permission denied! File explorer will not work.", Toast.LENGTH_SHORT).show()
                 }
             }
     }
@@ -77,7 +79,7 @@ class TranslateSignActivity : AppCompatActivity() {
                 if (result.resultCode == Activity.RESULT_OK) {
                     result.data?.data?.let { uri ->
                         videoUri = uri
-                        Toast.makeText(this, "Video recorded: $videoUri", Toast.LENGTH_LONG).show()
+                        Log.d(LOG_TAG, "Video recorded: $videoUri")
                         // Proceed to display the video
                         launchDisplayVideoActivity(uri)
                     } ?: run {
@@ -96,7 +98,7 @@ class TranslateSignActivity : AppCompatActivity() {
                 if (result.resultCode == Activity.RESULT_OK) {
                     result.data?.data?.let { uri ->
                         videoUri = uri
-                        Toast.makeText(this, "Video selected: $videoUri", Toast.LENGTH_LONG).show()
+                        Log.d(LOG_TAG, "Video selected, now playing: $videoUri")
                         // Proceed to display the video
                         launchDisplayVideoActivity(uri)
                     } ?: run {
@@ -167,9 +169,7 @@ class TranslateSignActivity : AppCompatActivity() {
     }
 
     private fun openGalleryToUploadVideo() {
-//        val intent = Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
-
-        // Option 2: Using ACTION_GET_CONTENT with a MIME type
+        // Using ACTION_GET_CONTENT with a MIME type
          val intent = Intent(Intent.ACTION_GET_CONTENT)
          intent.type = "video/*"
         uploadVideoLauncher.launch(intent)

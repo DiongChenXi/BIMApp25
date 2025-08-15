@@ -28,6 +28,8 @@ import java.io.InputStreamReader
 import kotlin.text.isNotBlank
 import kotlin.text.trim
 
+private const val LOG_TAG = "Results Activity"
+
 class ResultsActivity : AppCompatActivity() {
 
     private lateinit var videoView: VideoView
@@ -37,7 +39,7 @@ class ResultsActivity : AppCompatActivity() {
     private lateinit var backButton3: Button
 
     private var execuTorchModule: Module? = null
-    private val TAG = "ExecuTorchDemo"
+
     private lateinit var keypointProcessor: KeypointProcessorUtil
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,9 +57,9 @@ class ResultsActivity : AppCompatActivity() {
         try {
             val modelPath = getAbsolutePath("proposed_model_full.pte") // Make sure filename matches
             execuTorchModule = Module.load(modelPath)
-            Log.d(TAG, "ExecuTorch model loaded successfully!")
+            Log.d(LOG_TAG, "ExecuTorch model loaded successfully!")
         } catch (e: IOException) {
-            Log.e(TAG, "Error loading ExecuTorch model", e)
+            Log.e(LOG_TAG, "Error loading ExecuTorch model", e)
             // Handle the error appropriately (e.g., show a message to the user)
             Toast.makeText(this, "Error loading ExecuTorch model", Toast.LENGTH_LONG).show()
         }
@@ -102,7 +104,7 @@ class ResultsActivity : AppCompatActivity() {
                     keypointProcessor.processVideo(videoUri) // This should be a suspend function or run its own IO work
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Error during keypoint processing", e)
+                Log.e(LOG_TAG, "Error during keypoint processing", e)
                 withContext(Dispatchers.Main) { // Back to Main for UI
                     Toast.makeText(applicationContext, "Error processing video data: ${e.message}", Toast.LENGTH_LONG).show()
                     resultsTextView.text = "Error in processing."
@@ -117,7 +119,7 @@ class ResultsActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     showLoading(true, "Landmark processing complete. Running prediction...")
                 }
-                Log.d(TAG, "Processed keypoints shape: (${processedKeypoints.size}, ${processedKeypoints.firstOrNull()?.size ?: 0})")
+                Log.d(LOG_TAG, "Processed keypoints shape: (${processedKeypoints.size}, ${processedKeypoints.firstOrNull()?.size ?: 0})")
 
                 // Run prediction (potentially on Default dispatcher if CPU intensive)
                 val predictionResultText: String = withContext(Dispatchers.Default) {
@@ -129,7 +131,7 @@ class ResultsActivity : AppCompatActivity() {
                     showLoading(false) // Hide loading UI
                 }
             } else {
-                Log.w(TAG, "Keypoint processing returned null or empty.")
+                Log.w(LOG_TAG, "Keypoint processing returned null or empty.")
                 withContext(Dispatchers.Main) { // Back to Main for UI
                     if (!resultsTextView.text.toString().contains("Error")) { // Avoid overwriting specific error
                         resultsTextView.text = "Could not process landmarks from video."
@@ -143,7 +145,7 @@ class ResultsActivity : AppCompatActivity() {
     // Extracted prediction logic for clarity
     private fun runPrediction(processedKeypoints: List<FloatArray>): String {
         if (execuTorchModule == null) {
-            Log.e(TAG, "ExecuTorch module is not loaded for prediction.")
+            Log.e(LOG_TAG, "ExecuTorch module is not loaded for prediction.")
             return "Error: Model not ready."
         }
 
@@ -151,7 +153,7 @@ class ResultsActivity : AppCompatActivity() {
         val keypointsPerFrame = processedKeypoints.firstOrNull()?.size ?: 0
 
         if (numberOfFrames == 0 || keypointsPerFrame == 0) {
-            Log.w(TAG, "No keypoint data for prediction. Frames: $numberOfFrames, KeypointsPerFrame: $keypointsPerFrame")
+            Log.w(LOG_TAG, "No keypoint data for prediction. Frames: $numberOfFrames, KeypointsPerFrame: $keypointsPerFrame")
             return "Error: No keypoint data for prediction."
         }
 
@@ -163,7 +165,7 @@ class ResultsActivity : AppCompatActivity() {
                     flatInputArray[index++] = keypointValue
                 }
             } else {
-                Log.e(TAG, "Frame has incorrect number of keypoints. Expected $keypointsPerFrame, got ${frameKeypoints.size}")
+                Log.e(LOG_TAG, "Frame has incorrect number of keypoints. Expected $keypointsPerFrame, got ${frameKeypoints.size}")
                 // Handle this error appropriately - perhaps return an error message
                 // or skip this frame, though skipping might not be what you want.
                 // For now, let's assume valid data to avoid partial filling if an error occurs mid-way.
@@ -173,19 +175,19 @@ class ResultsActivity : AppCompatActivity() {
         val shape = longArrayOf(1, numberOfFrames.toLong(), keypointsPerFrame.toLong())
 
 //  Sanity check: log shape and data type
-        Log.d(TAG, "ExecuTorch input shape: [${shape.joinToString()}], " +
+        Log.d(LOG_TAG, "ExecuTorch input shape: [${shape.joinToString()}], " +
                 "Frames=$numberOfFrames, Keypoints/Frame=$keypointsPerFrame")
 
 //  Log min/max/sample values for quick inspection
         val minVal = flatInputArray.minOrNull() ?: Float.NaN
         val maxVal = flatInputArray.maxOrNull() ?: Float.NaN
         val sampleValues = flatInputArray.take(10).joinToString()
-        Log.d(TAG, "Input tensor min=$minVal, max=$maxVal, sample=[${sampleValues}]")
+        Log.d(LOG_TAG, "Input tensor min=$minVal, max=$maxVal, sample=[${sampleValues}]")
 
 //  Also confirm exact total length matches product of dimensions
         val expectedLength = shape.reduce { acc, l -> acc * l }
         if (flatInputArray.size != expectedLength.toInt()) {
-            Log.e(TAG, "Length mismatch: expected $expectedLength elements, got ${flatInputArray.size}")
+            Log.e(LOG_TAG, "Length mismatch: expected $expectedLength elements, got ${flatInputArray.size}")
             return "Error: Input length mismatch."
         }
 
@@ -194,35 +196,35 @@ class ResultsActivity : AppCompatActivity() {
         // 1. Create the single EValue
         val singleInputEValue = org.pytorch.executorch.EValue.from(inputExecutorchTensor)
 
-        Log.d(TAG, "Input EValue is tensor: ${singleInputEValue.isTensor}")
-        Log.d(TAG, "Input Tensor shape: ${inputExecutorchTensor.shape().joinToString()}")
-        Log.d(TAG, "Input Tensor dtype: ${inputExecutorchTensor.dtype()}") // Assuming dtype is available
+        Log.d(LOG_TAG, "Input EValue is tensor: ${singleInputEValue.isTensor}")
+        Log.d(LOG_TAG, "Input Tensor shape: ${inputExecutorchTensor.shape().joinToString()}")
+        Log.d(LOG_TAG, "Input Tensor dtype: ${inputExecutorchTensor.dtype()}") // Assuming dtype is available
 
         return try {
-            Log.d(TAG, "Calling execuTorchModule.forward with a single EValue.")
+            Log.d(LOG_TAG, "Calling execuTorchModule.forward with a single EValue.")
 
             try {
                 val shapeArr = inputExecutorchTensor.shape()   // returns LongArray
                 val shapeStr = shapeArr.joinToString(prefix="[", postfix="]") { it.toString() }
                 val dtype = inputExecutorchTensor.dtype()     // Java API: dtype()
-                Log.d(TAG, "ExecuTorch -> About to call forward(). Input Tensor shape: $shapeStr, numel=${inputExecutorchTensor.numel()}, dtype=$dtype")
+                Log.d(LOG_TAG, "ExecuTorch -> About to call forward(). Input Tensor shape: $shapeStr, numel=${inputExecutorchTensor.numel()}, dtype=$dtype")
             } catch (e: Throwable) {
-                Log.w(TAG, "Failed to introspect input tensor metadata", e)
+                Log.w(LOG_TAG, "Failed to introspect input tensor metadata", e)
             }
 
             try {
                 val start = System.currentTimeMillis()
                 val outputEValue = execuTorchModule!!.forward(singleInputEValue)
                 val took = System.currentTimeMillis() - start
-                Log.d(TAG, "ExecuTorch forward() returned in ${took}ms. outputEValue = $outputEValue")
+                Log.d(LOG_TAG, "ExecuTorch forward() returned in ${took}ms. outputEValue = $outputEValue")
                 // If you can, inspect outputEValue (toString) or cast/convert per API.
                 // Example safe call:
-                Log.d(TAG, "Output EValue.toString(): ${outputEValue?.toString()}")
+                Log.d(LOG_TAG, "Output EValue.toString(): ${outputEValue?.toString()}")
             } catch (t: Throwable) {
                 // Log the Java exception and the full stack trace
-                Log.e(TAG, "ExecuTorch forward() failed with exception: ${t.message}", t)
+                Log.e(LOG_TAG, "ExecuTorch forward() failed with exception: ${t.message}", t)
                 // Helpful hint printed so you can capture native logs
-                Log.e(TAG, "Now capture adb logcat (see instructions in app log or run: adb logcat -v time | grep -i executorch )")
+                Log.e(LOG_TAG, "Now capture adb logcat (see instructions in app log or run: adb logcat -v time | grep -i executorch )")
             }
 
             val outputReturn = execuTorchModule?.forward(singleInputEValue) // PASS SINGLE EVALUE
@@ -230,7 +232,7 @@ class ResultsActivity : AppCompatActivity() {
             val outputEValueArray: Array<org.pytorch.executorch.EValue>? = outputReturn as? Array<org.pytorch.executorch.EValue>
 
             if (outputEValueArray == null || outputEValueArray.isEmpty()) {
-                Log.e(TAG, "Model forward pass returned null, empty, or non-array EValue.")
+                Log.e(LOG_TAG, "Model forward pass returned null, empty, or non-array EValue.")
                 return "Model output error: No output received or unexpected return type."
             }
 
@@ -238,30 +240,30 @@ class ResultsActivity : AppCompatActivity() {
 
             if (firstOutputEValue.isTensor) {
                 val outputExecutorchTensor: org.pytorch.executorch.Tensor = firstOutputEValue.toTensor()
-                Log.d(TAG, "Output Tensor shape: ${outputExecutorchTensor.shape().joinToString()}") // Should be [1, 118]
-                Log.d(TAG, "Output Tensor dtype: ${outputExecutorchTensor.dtype()}")     // Should be Float32
+                Log.d(LOG_TAG, "Output Tensor shape: ${outputExecutorchTensor.shape().joinToString()}") // Should be [1, 118]
+                Log.d(LOG_TAG, "Output Tensor dtype: ${outputExecutorchTensor.dtype()}")     // Should be Float32
 
                 // The output tensor data is what we need. It's an array of floats (logits).
                 // For a shape of (1, num_classes), dataAsFloatArray will give a flat array of num_classes elements.
                 val outputLogits: FloatArray = outputExecutorchTensor.dataAsFloatArray
 
                 if (outputLogits.isEmpty()) {
-                    Log.e(TAG, "Output logits array is empty.")
+                    Log.e(LOG_TAG, "Output logits array is empty.")
                     return "Model output error: Empty logits."
                 }
-                Log.d(TAG, "Number of output logits: ${outputLogits.size}") // Should be 118
+                Log.d(LOG_TAG, "Number of output logits: ${outputLogits.size}") // Should be 118
 
                 // Load your labels (ensure this path and file name are correct)
                 // You might have already loaded this earlier in the function, if so, reuse the 'labels' variable
                 val labels = loadLabels(applicationContext, "gesture_names.txt") // Or your actual label file name
 
                 if (labels.isEmpty()) {
-                    Log.e(TAG, "Labels file is empty or could not be loaded.")
+                    Log.e(LOG_TAG, "Labels file is empty or could not be loaded.")
                     return "Error: Labels not loaded."
                 }
 
                 if (labels.size != outputLogits.size) {
-                    Log.e(TAG, "Mismatch between number of labels (${labels.size}) and model output logits (${outputLogits.size}).")
+                    Log.e(LOG_TAG, "Mismatch between number of labels (${labels.size}) and model output logits (${outputLogits.size}).")
                     return "Error: Label count mismatch with model output."
                 }
 
@@ -279,7 +281,7 @@ class ResultsActivity : AppCompatActivity() {
                 }
 
                 if (predictedIndex == -1) {
-                    Log.e(TAG, "Could not determine predicted class from logits.")
+                    Log.e(LOG_TAG, "Could not determine predicted class from logits.")
                     return "Error: Prediction processing failed."
                 }
 
@@ -289,17 +291,17 @@ class ResultsActivity : AppCompatActivity() {
 //               Apply Softmax if you want probabilities (for display or confidence)
                  val probabilities = softmax(outputLogits)
                  val confidence = probabilities[predictedIndex]
-                 Log.i(TAG, "Predicted Sign: $predictedLabel, Confidence: $confidence")
+                 Log.i(LOG_TAG, "Predicted Sign: $predictedLabel, Confidence: $confidence")
 //                 return "Predicted Sign: $predictedLabel (Confidence: ${String.format("%.2f", confidence)})"
 
                 return "Predicted Sign: $predictedLabel"
 
             } else {
-                Log.e(TAG, "First model output EValue is not a tensor.")
+                Log.e(LOG_TAG, "First model output EValue is not a tensor.")
                 return "Model output error: Output is not a tensor."
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error running ExecuTorch model inference", e) // Your current error is likely caught here
+            Log.e(LOG_TAG, "Error running ExecuTorch model inference", e) // Your current error is likely caught here
             "Error during prediction: ${e.message}"
         } finally {
             // inputExecutorchTensor.destroy() // Optional: Consider if needed for your Tensor implementation
@@ -321,7 +323,7 @@ class ResultsActivity : AppCompatActivity() {
                 }
             }
         } catch (e: IOException) {
-            Log.e(TAG, "Error loading labels from $fileName", e)
+            Log.e(LOG_TAG, "Error loading labels from $fileName", e)
             // You might want to throw an exception here or return an empty list
             // and handle it gracefully where you call this function.
             // For now, it will return an empty list or whatever was loaded before the error.
@@ -359,7 +361,6 @@ class ResultsActivity : AppCompatActivity() {
     private fun setVideoViewDimensions() {
         // Get screen dimensions
         val screenWidth: Int
-        val screenHeight: Int
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val windowMetrics = windowManager.currentWindowMetrics
@@ -367,13 +368,11 @@ class ResultsActivity : AppCompatActivity() {
                 android.view.WindowInsets.Type.systemBars()
             )
             screenWidth = windowMetrics.bounds.width() - insets.left - insets.right
-            screenHeight = windowMetrics.bounds.height() - insets.top - insets.bottom
         } else {
             val displayMetrics = DisplayMetrics()
             @Suppress("DEPRECATION")
             windowManager.defaultDisplay.getMetrics(displayMetrics)
             screenWidth = displayMetrics.widthPixels
-            screenHeight = displayMetrics.heightPixels
         }
 
         // Calculate desired dimensions
@@ -387,7 +386,7 @@ class ResultsActivity : AppCompatActivity() {
         videoView.layoutParams = layoutParams
 
         // Log the dimensions for debugging (optional)
-        // Toast.makeText(this, "VideoView dimensions: W=$desiredWidth, H=$desiredHeight", Toast.LENGTH_LONG).show()
+         Log.d(LOG_TAG, "VideoView dimensions: W=$desiredWidth, H=$desiredHeight")
     }
 
     private fun setupVideoView(videoUri: Uri) {
@@ -402,7 +401,7 @@ class ResultsActivity : AppCompatActivity() {
             // Video is prepared and ready to play
             mp.isLooping = true // Optional: if you want the video to loop
             videoView.start()
-            Toast.makeText(this, "Playing video...", Toast.LENGTH_SHORT).show()
+            Log.d(LOG_TAG, "Playing video...")
         }
 
         videoView.setOnErrorListener { _, _, _ ->
@@ -433,14 +432,14 @@ class ResultsActivity : AppCompatActivity() {
         // Check documentation for specific cleanup requirements.
         // For older PyTorch Mobile, module.destroy() was common.
         // The current ExecuTorch API might differ.
-        execuTorchModule?.destroy();
+        execuTorchModule?.destroy()
     }
 
-    public fun onUploadButtonClick(view: View) {
+    fun onUploadButtonClick(view: View) {
         Toast.makeText(this, "Upload Button Clicked!", Toast.LENGTH_SHORT).show()
     }
 
-    public fun onBackButtonClick3(view: View) {
+    fun onBackButtonClick3(view: View) {
         Toast.makeText(this, "Home Button Clicked!", Toast.LENGTH_SHORT).show()
         finish()
     }

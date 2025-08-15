@@ -5,11 +5,14 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import android.widget.MediaController
 import android.widget.Toast
 import android.widget.VideoView
 import androidx.appcompat.app.AppCompatActivity
+
+private const val LOG_TAG = "Display Video Activity"
 
 class DisplayVideoActivity : AppCompatActivity() {
 
@@ -30,6 +33,7 @@ class DisplayVideoActivity : AppCompatActivity() {
 
         if (videoUriString != null) {
             val videoUri = Uri.parse(videoUriString)
+            Log.d(LOG_TAG, "Video selected, now playing: $videoUri")
             setupVideoView(videoUri)
         } else {
             Toast.makeText(this, "Error: Video URI not found", Toast.LENGTH_LONG).show()
@@ -40,7 +44,6 @@ class DisplayVideoActivity : AppCompatActivity() {
     private fun setVideoViewDimensions() {
             // Get screen dimensions
             val screenWidth: Int
-            val screenHeight: Int
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 val windowMetrics = windowManager.currentWindowMetrics
@@ -48,13 +51,11 @@ class DisplayVideoActivity : AppCompatActivity() {
                     android.view.WindowInsets.Type.systemBars()
                 )
                 screenWidth = windowMetrics.bounds.width() - insets.left - insets.right
-                screenHeight = windowMetrics.bounds.height() - insets.top - insets.bottom
             } else {
                 val displayMetrics = DisplayMetrics()
                 @Suppress("DEPRECATION")
                 windowManager.defaultDisplay.getMetrics(displayMetrics)
                 screenWidth = displayMetrics.widthPixels
-                screenHeight = displayMetrics.heightPixels
             }
 
             // Calculate desired dimensions
@@ -68,7 +69,7 @@ class DisplayVideoActivity : AppCompatActivity() {
             videoView.layoutParams = layoutParams
 
             // Log the dimensions for debugging (optional)
-            // Toast.makeText(this, "VideoView dimensions: W=$desiredWidth, H=$desiredHeight", Toast.LENGTH_LONG).show()
+            Log.d(LOG_TAG, "VideoView dimensions: W=$desiredWidth, H=$desiredHeight")
     }
 
     private fun setupVideoView(videoUri: Uri) {
@@ -83,7 +84,7 @@ class DisplayVideoActivity : AppCompatActivity() {
             // Video is prepared and ready to play
             mp.isLooping = true // Optional: if you want the video to loop
             videoView.start()
-            Toast.makeText(this, "Playing video...", Toast.LENGTH_SHORT).show()
+            Log.d(LOG_TAG, "Playing video...")
         }
 
         videoView.setOnErrorListener { mp, what, extra ->
@@ -107,18 +108,18 @@ class DisplayVideoActivity : AppCompatActivity() {
         videoView.stopPlayback()
     }
 
-    public fun onContinueButtonClick(view: View) {
-        Toast.makeText(this, "Continue Button Clicked!", Toast.LENGTH_SHORT).show()
+    fun onContinueButtonClick(view: View) {
+        Log.d(LOG_TAG, "Navigating to Results Activity.")
         val videoUri = Uri.parse(videoUriString)
         launchResultsActivity(videoUri)
     }
 
-    public fun onBackButtonClick2(view: View) {
-        Toast.makeText(this, "Back Button Clicked!", Toast.LENGTH_SHORT).show()
+    fun onBackButtonClick2(view: View) {
+        Log.d(LOG_TAG, "Navigating back to Translate Sign Activity.")
         finish()
     }
 
-    private fun launchResultsActivity(uri: android.net.Uri) {
+    private fun launchResultsActivity(uri: Uri) {
         val intent = Intent(this, ResultsActivity::class.java).apply {
             putExtra(DISPLAY_VIDEO_URI, uri.toString()) // Pass URI as a String
         }
