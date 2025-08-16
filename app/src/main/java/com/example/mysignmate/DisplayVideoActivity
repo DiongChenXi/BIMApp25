@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.MediaController
 import android.widget.Toast
 import android.widget.VideoView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 
 private const val LOG_TAG = "Display Video Activity"
@@ -123,7 +124,16 @@ class DisplayVideoActivity : AppCompatActivity() {
         val intent = Intent(this, ResultsActivity::class.java).apply {
             putExtra(DISPLAY_VIDEO_URI, uri.toString()) // Pass URI as a String
         }
-        startActivity(intent)
+        startResultsActivityLauncher.launch(intent)
     }
+
+    private val startResultsActivityLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == ResultsActivity.RESULT_NAVIGATE_HOME) {
+                // ResultsActivity signaled to go back further, so PreviousActivity also finishes
+                finish()
+            }
+            // Handle other results if any
+        }
 }
     

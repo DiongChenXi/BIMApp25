@@ -58,11 +58,22 @@
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 
+        <TextView
+            android:id="@+id/display_video_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="20dp"
+            android:text="Video Uploaded"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
         <VideoView
             android:id="@+id/video_display"
             android:layout_width="1dp"
             android:layout_height="1dp"
-            android:layout_below="@id/toolbar"
+            android:layout_below="@id/display_video_title"
             android:layout_centerInParent="true"
             android:layout_marginTop="30dp" />
 

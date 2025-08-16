@@ -60,22 +60,33 @@
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 
+        <TextView
+            android:id="@+id/results_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="20dp"
+            android:text="Learn Sign"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
         <ProgressBar
             android:id="@+id/loading_progress_bar"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:layout_below="@id/toolbar"
+            android:layout_below="@id/results_title"
             android:layout_centerInParent="true"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="60dp"
             tools:visibility="visible"/>
 
         <VideoView
             android:id="@+id/replay_video_display"
             android:layout_width="1dp"
             android:layout_height="1dp"
-            android:layout_below="@id/toolbar"
+            android:layout_below="@id/results_title"
             android:layout_centerInParent="true"
             android:layout_marginTop="30dp" />
 
@@ -96,7 +107,7 @@
             android:layout_height="85dp"
             android:layout_below="@id/results_text"
             android:layout_centerInParent="true"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:onClick="onUploadButtonClick"
             android:text="Upload Another"
             android:textSize="25sp" />

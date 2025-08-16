@@ -63,13 +63,24 @@
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 
-        <com.google.android.material.button.MaterialButton
+        <TextView
+            android:id="@+id/main_activity_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="50dp"
+            android:text="Home Page"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+        <Button
             android:id="@+id/translate_sign_button"
             android:layout_width="251dp"
             android:layout_height="85dp"
-            android:layout_below="@id/toolbar"
+            android:layout_below="@id/main_activity_title"
             android:layout_centerInParent="true"
-            android:layout_marginTop="200dp"
+            android:layout_marginTop="100dp"
             android:onClick="onTranslateSignButtonClick"
             android:text="Translate Sign"
             android:textSize="25sp" />

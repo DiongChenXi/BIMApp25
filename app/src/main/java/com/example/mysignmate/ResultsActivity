@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
@@ -31,6 +32,9 @@ import kotlin.text.trim
 private const val LOG_TAG = "Results Activity"
 
 class ResultsActivity : AppCompatActivity() {
+    companion object{
+        const val RESULT_NAVIGATE_HOME = 101
+    }
 
     private lateinit var videoView: VideoView
     private lateinit var resultsTextView: TextView
@@ -41,6 +45,8 @@ class ResultsActivity : AppCompatActivity() {
     private var execuTorchModule: Module? = null
 
     private lateinit var keypointProcessor: KeypointProcessorUtil
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -127,7 +133,7 @@ class ResultsActivity : AppCompatActivity() {
                 }
 
                 withContext(Dispatchers.Main) { // Back to Main for UI
-                    resultsTextView.text = predictionResultText
+                    resultsTextView.text = Html.fromHtml(predictionResultText, Html.FROM_HTML_MODE_LEGACY)
                     showLoading(false) // Hide loading UI
                 }
             } else {
@@ -294,7 +300,7 @@ class ResultsActivity : AppCompatActivity() {
                  Log.i(LOG_TAG, "Predicted Sign: $predictedLabel, Confidence: $confidence")
 //                 return "Predicted Sign: $predictedLabel (Confidence: ${String.format("%.2f", confidence)})"
 
-                return "Predicted Sign: $predictedLabel"
+                return "Predicted Sign: <b>$predictedLabel</b>"
 
             } else {
                 Log.e(LOG_TAG, "First model output EValue is not a tensor.")
@@ -436,11 +442,13 @@ class ResultsActivity : AppCompatActivity() {
     }
 
     fun onUploadButtonClick(view: View) {
-        Toast.makeText(this, "Upload Button Clicked!", Toast.LENGTH_SHORT).show()
+        Log.d(LOG_TAG, "Navigating back to Uploading Video.")
+        setResult(RESULT_NAVIGATE_HOME)
+        finish()
     }
 
     fun onBackButtonClick3(view: View) {
-        Toast.makeText(this, "Home Button Clicked!", Toast.LENGTH_SHORT).show()
+        Log.d(LOG_TAG, "Navigating back to Display Video Activity.")
         finish()
     }
 
