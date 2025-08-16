@@ -130,7 +130,7 @@ class DisplayVideoActivity : AppCompatActivity() {
     private val startResultsActivityLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == ResultsActivity.RESULT_NAVIGATE_HOME) {
-                // ResultsActivity signaled to go back further, so PreviousActivity also finishes
+                // ResultsActivity.kt signaled to go back further, so PreviousActivity also finishes
                 finish()
             }
             // Handle other results if any
