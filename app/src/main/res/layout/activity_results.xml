@@ -67,7 +67,7 @@
             android:layout_below="@id/toolbar"
             android:layout_centerInParent="true"
             android:layout_marginTop="20dp"
-            android:text="Learn Sign"
+            android:text="Results"
             android:textSize="40sp"
             android:textStyle="bold" />
 
